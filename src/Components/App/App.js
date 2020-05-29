@@ -9,6 +9,21 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      playlistName: 'New Playlist',
+      playlistTracks: [
+        {
+          id: 3,
+          name: 'Name3',
+          artist: 'Artist3',
+          album: 'Album3'
+        },
+        {
+          id: 4,
+          name: 'Name4',
+          artist: 'Artist4',
+          album: 'Album4'
+        }
+      ],
       searchResults: [
         {
           id: 1,
@@ -24,6 +39,27 @@ class App extends React.Component {
         }
       ]
     };
+    this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
+  }
+
+  addTrack(track) {
+    let tracks = this.state.playlistTracks;
+    if (tracks.find((savedTrack) => savedTrack.id === track.id)) {
+      return;
+    }
+    tracks.push(track);
+    this.setState({
+      playlistTracks: tracks
+    });
+  }
+
+  removeTrack(track) {
+    let tracks = this.state.playlistTracks;
+    tracks = tracks.filter((currentTrack) => currentTrack.id !== track.id);
+    this.setState({
+      playlistTracks: tracks
+    });
   }
 
   render() {
@@ -35,8 +71,15 @@ class App extends React.Component {
         <div className='App'>
           <SearchBar />
           <div className='App-playlist'>
-            <SearchResults searchResults={this.state.searchResults} />
-            <Playlist />
+            <SearchResults
+              searchResults={this.state.searchResults}
+              onAdd={this.addTrack}
+            />
+            <Playlist
+              playlistTracks={this.state.playlistTracks}
+              playlistName={this.state.playlistName}
+              onRemove={this.removeTrack}
+            />
           </div>
         </div>
       </div>
